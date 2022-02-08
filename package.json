@@ -1,0 +1,20 @@
+{
+  "name": "wordle-solver",
+  "version": "0.0.1",
+  "description": "Node Wordle Solving App",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "wordle"
+  ],
+  "author": "roto",
+  "license": "MIT",
+  "devDependencies": {
+    "lodash": "^4.17.21"
+  },
+  "dependencies": {
+    "command-line-args": "^5.2.0"
+  }
+}
