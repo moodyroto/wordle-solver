@@ -72,14 +72,22 @@ const getSolveCount = (answer) => {
     5: 0,
     6: 0
   };
+  const avg = [];
   const benchmarkLength = benchmarkWords.length;
+  
   for(let i = 0; i < benchmarkLength; i++) {
     console.log(`Calculating ${i} of ${benchmarkLength}`);
 
     const result = getSolveCount(benchmarkWords[i]);
+    
+    if (result < 7) {
+      avg.push(result);
+    }
+    
     results[result]++;
   }
 
+  console.log('Average score: ', avg.reduce((a, b) => a + b, 0) / avg.length);
   console.log(babar([
     [1, results['0']],
     [2, results['1']],
