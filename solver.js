@@ -2,8 +2,6 @@ const dictionary = require('./dict/word-rank-sum.json');
 const _ = require('lodash');
 
 const solve = (guesses, results) => {
-  console.log('guesses', guesses);
-  console.log('results', results);
   const splitRegex = /(?!$)/;
   const dict = getOrderedWords();
 
@@ -21,8 +19,6 @@ const solve = (guesses, results) => {
   const foundLetters = [];
   const missedLetters = [];
 
-  console.log('tries', tries);
-
   // fill out matches
   tries.forEach(t => {
     t.guess.forEach((g, i) => {
@@ -33,8 +29,6 @@ const solve = (guesses, results) => {
       }
     });
   });
-
-  console.log('matches', matchLetters);
 
   // fill out found
   tries.forEach(t => {
@@ -48,8 +42,6 @@ const solve = (guesses, results) => {
     });
   });
 
-  console.log('found', foundLetters);
-
   // fill out misses
   tries.forEach(t => {
     t.guess.forEach((g, i) => {
@@ -62,13 +54,10 @@ const solve = (guesses, results) => {
       }
     });
   });
-  console.log('misses', missedLetters);
 
   return dict.find(d => {
     const testWord = d.word;
     let isNextWord = true;
-
-    console.log('checking word', testWord);
 
     for(let i = 0; i < matchLetters.length && isNextWord; i++) {
       const matchLetter = matchLetters[i];
@@ -76,7 +65,6 @@ const solve = (guesses, results) => {
       //const matchIndex = testWord.indexOf(matchLetter.letter);
 
       if (corrispondingLetter !== matchLetter.letter) {
-        console.log(`${testWord} does not contain an ${matchLetter.letter} at index ${matchLetter.index}`);
         isNextWord = false;
         continue;
       }
@@ -87,11 +75,9 @@ const solve = (guesses, results) => {
       const foundIndex = testWord.indexOf(foundLetter.letter);
 
       if (foundIndex < 0) {
-        console.log(`${testWord} does not contain ${foundLetter.letter}`);
         isNextWord = false;
         continue;
       } else if (foundIndex === foundLetter.index) {
-        console.log(`${testWord} contains ${foundLetter.letter} at an index already guessed, ${foundLetter.index}`);
         isNextWord = false;
         continue;
       }
@@ -101,7 +87,6 @@ const solve = (guesses, results) => {
       const letter = testWord[i];
 
       if (missedLetters.indexOf(letter) >= 0) {
-        console.log('missedLetter contains', letter);
         isNextWord = false;
         continue;
       }
