@@ -12,6 +12,7 @@
   "author": "roto",
   "license": "MIT",
   "devDependencies": {
+    "babar": "^0.2.0",
     "lodash": "^4.17.21"
   },
   "dependencies": {
