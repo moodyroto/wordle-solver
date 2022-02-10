@@ -1,7 +1,10 @@
+const fs = require('fs');
+const cliProgress = require('cli-progress');
 const babar = require('babar');
 const benchmarkWords = require('./dict/wordle-benchmark.json');
 const solver = require('./solver.js');
 const MAX_GUESS_COUNT = 6;
+const failedWords = [];
 
 const getWordMatch = (guess, answer) => {
   const results = [];
@@ -58,6 +61,7 @@ const getSolveCount = (answer) => {
     results.push(getWordMatch(suggestion, answer).join(''));
   }
 
+  failedWords.push(answer);
   //console.log('Did not solve', answer);
   return MAX_GUESS_COUNT;
 };
@@ -74,19 +78,25 @@ const getSolveCount = (answer) => {
   };
   const avg = [];
   const benchmarkLength = benchmarkWords.length;
-  
+  const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+
+  progressBar.start(benchmarkLength, 0);
+
   for(let i = 0; i < benchmarkLength; i++) {
-    console.log(`Calculating ${i} of ${benchmarkLength}`);
+    progressBar.update(i);
+    //console.log(`Calculating ${i} of ${benchmarkLength}`);
 
     const result = getSolveCount(benchmarkWords[i]);
-    
+
     if (result < 7) {
       avg.push(result);
     }
-    
+
     results[result]++;
   }
 
+  fs.writeFileSync('./dict/failed-solve-words.json', JSON.stringify(failedWords));
+  progressBar.stop();
   console.log('Average score: ', avg.reduce((a, b) => a + b, 0) / avg.length);
   console.log(babar([
     [1, results['0']],

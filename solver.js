@@ -1,4 +1,4 @@
-const dictionary = require('./dict/word-rank-sum.json');
+const dictionary = require('./dict/word-rank-log.json');
 const _ = require('lodash');
 
 const solve = (guesses, results) => {
