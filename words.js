@@ -38,7 +38,7 @@ const alphabet = [
 ];
 
 const filteredWords = require('./dict/worlde-words.json');
-const MISSING_LEMMA_SCORE = Math.log(70000); //61945
+const MISSING_LEMMA_SCORE = Math.log(20000000000); //61945
 
 // // get the list of five letter words
 // allWords.forEach(word => {
@@ -67,8 +67,9 @@ const getScoredWords = (commonWords) => {
   // calculate word score
   //const wordSum = {};
   const wordLog = {}
-  filteredWords.forEach(word => {
-    const commonWord = commonWords.find(cw => cw.word === word || cw.word.indexOf(word) >= 0);
+  filteredWords.forEach((word, index) => {
+    const commonWord = commonWords.find(cw => cw.word.toLowerCase() === word);
+    const commonWordIndex = commonWord ? commonWords.length - commonWords.indexOf(commonWord) : 0;
 
     if (commonWord) {
       console.log('common word found for', word);
@@ -91,7 +92,8 @@ const getScoredWords = (commonWords) => {
     }
 
     //wordSum[word] = sum;
-    wordLog[word] = Math.log(letterScore) - Math.log(commonWord ? commonWord.score : MISSING_LEMMA_SCORE);
+    //wordLog[word] = Math.log(letterScore) - (commonWord ? Math.log(Math.pow(index, 2)) : MISSING_LEMMA_SCORE);
+    wordLog[word] = Math.log(letterScore) + (commonWord ? Math.log(commonWordIndex) : 0);
   });
 
   return wordLog;
@@ -110,14 +112,20 @@ const getFilteredLemmas = (lemmas) => {
     });
 };
 
+const getFilteredWords = (words) => {
+  return words.filter(w => w.word.length === 5);
+};
+
 (() => {
   const csvData = [];
 
-  fs.createReadStream('./dict/lemmas_60k.csv')
+  //fs.createReadStream('./dict/lemmas_60k.csv')
+  fs.createReadStream('./dict/common_words.csv')
     .pipe(csv())
     .on('data', data => csvData.push(data))
     .on('end', () => {
-      const lemmas = getFilteredLemmas(csvData);
+      //const lemmas = getFilteredLemmas(csvData);
+      const lemmas = getFilteredWords(csvData);
       const wordLog = getScoredWords(lemmas);
 
       fs.writeFileSync('./dict/word-rank-log.json', JSON.stringify(wordLog));
